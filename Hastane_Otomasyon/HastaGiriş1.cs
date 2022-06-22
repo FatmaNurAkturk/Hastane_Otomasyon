@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace Hastane_Otomasyon
+{
+    public partial class HastaGiriş1 : Form
+    {
+        public HastaGiriş1()
+        {
+            InitializeComponent();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            KayıtOl1 fr = new KayıtOl1();
+            fr.Show();
+        }
+
+        sqlbaglantisi bgl = new sqlbaglantisi();
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SqlCommand komut = new SqlCommand(" Select * From Tablo_Hasta1 where HastaTc =@p1 and HastaSifre=@p2",bgl.baglanti());
+            komut.Parameters.AddWithValue("@p1", mskTcNo.Text);
+            komut.Parameters.AddWithValue("@p2", txtSifre.Text);
+            SqlDataReader dr = komut.ExecuteReader();
+            if (dr.Read())
+            {
+                HastaDetay1 frm = new HastaDetay1();
+                frm.Tc = mskTcNo.Text;
+                frm.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Hatalı Şifre veya TCKimlik Numarası");
+            }
+            bgl.baglanti().Close();
+        }
+    }
+}
